@@ -1,8 +1,7 @@
 # This file is used to ignore files which are generated
 # ----------------------------------------------------------------------------
 
-*vscode*/
-vscode*/
+.vscode*/
 backup/
 build*/
 others/
