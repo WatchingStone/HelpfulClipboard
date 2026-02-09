@@ -5,6 +5,7 @@
 #include <QTimer>
 #include "WindowsHelper.h"
 #include <QCheckBox>
+#include <QDebug>
 
 MainController::MainController(QObject *parent) : QObject(parent) {
     // 注册自定义类型
@@ -14,7 +15,9 @@ MainController::MainController(QObject *parent) : QObject(parent) {
     cb_listener = new ClipboardListener(this);
     cb_manager  = new ClipboardManager(5, this);
     ball     = new FloatingBall();
-    sidebar  = new SidebarWidget();
+    sidebar  = new Sidebar();
+    quickbar = new Quickbar();
+    kb_listener = new KeyboardListener();
 
     // 连接信号槽
     /*当【监听器】发出“获得新数据”信号时，交给【管理器】，添加进历史记录*/
@@ -31,16 +34,39 @@ MainController::MainController(QObject *parent) : QObject(parent) {
     connect(ball, &FloatingBall::_rightClicked, this, &MainController::_on_ball_get_right_clicked);
 
     // 侧边栏的信号
-    connect(sidebar, &SidebarWidget::_itemSelected, this, &MainController::_on_sidebar_item_get_selected);
-    connect(sidebar, &SidebarWidget::_keepSidebarBtnPressed, this, [this](bool checked){
+    connect(sidebar, &Sidebar::_itemSelected, this, &MainController::_on_sidebar_item_get_selected);
+    connect(sidebar, &Sidebar::_keepSidebarBtnPressed, this, [this](bool checked){
         if(checked) _on_keep_sidebar_BTN_pressd_DO_set_flag(true);
         else _on_keep_sidebar_BTN_pressd_DO_set_flag(false);
     });
+
+    // 快捷栏的信号
+    connect(quickbar, &Quickbar::_quickbarGetSlotClicked, this, &MainController::write_and_paste);
+
+    // 键盘监听器的信号
+    connect(kb_listener, &KeyboardListener::_slotHotkeyPressed, this, [this](int slotId){
+        /*当键盘监听器监听到热键触发，则直接从快捷栏对应槽位中读取数据进行回写*/
+        qDebug() << ">>>【MainController】接收来自【KeyboardListener】的热键触发信号：slotId = " << slotId;
+
+        QSharedPointer<CopyableData> data = quickbar->getDataInSlot(slotId);
+        if(data){
+            qDebug() << ">>>【MainController】正在回写【Quickbar】下【QuickSlot = "<< slotId << "】"; 
+            write_and_paste(data);
+        }
+        else{
+            qDebug() << ">>>【MainController】在【Quickbar】的.getDataInSlot(slotId = " << slotId << ") 的内容为空"; 
+        }
+    });
+    
+    qDebug() << ">>>【MainContorller】完成构造函数";
 }
 
 void MainController::start(){
     /*程序初始化状态*/
     ball->show();
+    quickbar->show();
+    quickbar->adjustPositonToScreenEdge();
+    qDebug() << ">>>【MainContorller】完成.start()";
 }
 
 void MainController::_on_ball_get_left_clicked(){

@@ -48,3 +48,16 @@ QList<QUrl> CopyableData::getUrls(){
 QString CopyableData::getInfo(){
     return info;
 }
+
+QDataStream &operator<<(QDataStream &out, const CopyableData &data){
+    /*流操作符重载*/
+    out << (int)data.type << data.text << data.img << data.urls << data.info;
+    return out;
+}
+QDataStream &operator>>(QDataStream &in, CopyableData &data){
+    /*流操作符重载*/
+    int typeInt;
+    in >> typeInt >> data.text >> data.img >> data.urls >> data.info;
+    data.setType(static_cast<DataType>(typeInt));
+    return in;
+}

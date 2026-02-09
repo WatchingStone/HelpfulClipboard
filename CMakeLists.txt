@@ -21,8 +21,18 @@ find_package(Qt5 COMPONENTS Widgets REQUIRED)
 # 如果你有 main.cpp, mainwindow.cpp 等，都在这里列出
 # 也可以用 file(GLOB_RECURSE SRCS *.cpp *.h) 自动扫描，但手动指定更规范
 add_executable(HelpfulClipBoard
-    source/SidebarWidget.cpp
-    source/SidebarWidget.h
+    source/KeyboardListener.cpp
+    source/KeyboardListener.h
+    source/SlotUIWidget.cpp
+    source/SlotUIWidget.h
+    source/BaseUIWidget.cpp
+    source/BaseUIWidget.h
+    source/QuickSlot.cpp
+    source/QuickSlot.h
+    source/Quickbar.cpp
+    source/Quickbar.h
+    source/Sidebar.cpp
+    source/Sidebar.h
     source/MainController.cpp
     source/MainController.h
     source/FloatingBall.cpp

@@ -1,6 +1,6 @@
 // 【侧边栏】类，处理纯粹的 UI 渲染逻辑
-#ifndef SIDEBARWIDGET_H
-#define SIDEBARWIDGET_H
+#ifndef SIDEBAR_H
+#define SIDEBAR_H
 
 #include <QWidget>
 #include <QListWidget>
@@ -21,7 +21,7 @@ enum ItemDataAttribute{     // widget中的 QListWidget 中的 QListWidgetItem �
     otherData
 };
 
-class SidebarWidget : public QWidget{
+class Sidebar : public QWidget{
     Q_OBJECT
     private:
         QListWidget *listWidget;        // 侧边栏的ui显示列表
@@ -29,12 +29,13 @@ class SidebarWidget : public QWidget{
         QWidget *headlineWidget;        // 侧边栏的标题行
         QHBoxLayout *headlineLayout;    
         QPushButton *closeWindowBtn;    // 窗口关闭按钮，可以直接关闭侧边栏
+        QPushButton *exit_btn;          // 结束整个程序的按钮
         QVBoxLayout *mainLayout;        // 侧边栏的主布局
         QPoint press_start_position;    // 拖拽判断的参考点
         QPoint drag_position;           // 拖拽判断的参考点
     
     public:
-        explicit SidebarWidget(QWidget *parent = nullptr);
+        explicit Sidebar(QWidget *parent = nullptr);
         void updateList(const QList<QSharedPointer<CopyableData>> &history);
         bool eventFilter(QObject *obj, QEvent *event) override; // 对于下属子组件设置的过滤器，指向子组件的事件会首先经过本父组件进行处理
     
@@ -45,8 +46,8 @@ class SidebarWidget : public QWidget{
     // protected:
     //     void mousePressEvent(QMouseEvent *event) override;      // 为了实现拖拽侧边栏，重写鼠标移动事件
     //     void mouseMoveEvent(QMouseEvent *event) override;
-        // void mouseReleaseEvent(QMouseEvent *event) override;
+    //     void mouseReleaseEvent(QMouseEvent *event) override;
 };
 
 
-#endif // SIDEBARWIDGET_H
+#endif // Sidebar_H

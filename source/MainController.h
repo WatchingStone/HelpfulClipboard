@@ -12,8 +12,9 @@
 #include "ClipboardListener.h"
 #include "ClipboardManager.h"
 #include "FloatingBall.h"
-#include "SidebarWidget.h"
-
+#include "Sidebar.h"
+#include "Quickbar.h"
+#include "KeyboardListener.h"
 
 
 class MainController : public QObject{
@@ -22,16 +23,12 @@ class MainController : public QObject{
         ClipboardListener *cb_listener; // 剪贴板监听器
         ClipboardManager *cb_manager;   // 剪贴板历史记录条目管理器（核心的数据存储结构）
         FloatingBall *ball;             // 悬浮球
-        SidebarWidget *sidebar;         // 侧边栏
+        Sidebar *sidebar;               // 侧边栏
+        Quickbar *quickbar;             // 快捷栏
+        KeyboardListener *kb_listener;  // 键盘热键监听器
         bool keep_sidebar_top_hint;     // 在点击侧边栏条目并完成写回后是否保持显示侧边栏
-
-
-        void restoreFocusAndPaste();    // 恢复至上一个窗口焦点，然后粘贴
         
-        // void write_to_clipboard(QSharedPointer<CopyableData> d);
-        // void simulate_Press_Ctrl_V();   // 模拟按下ctrl+v事件
-        // void refreshUI();               // 更新UI显示
-        // void showSideBarAtBall();       // 进行悬浮球到侧边栏的转换，在悬浮球的坐标处显示侧边栏
+        void restoreFocusAndPaste();    // 恢复至上一个窗口焦点，然后粘贴
 
     public:
         explicit MainController(QObject *parent = nullptr);

@@ -2,6 +2,9 @@
 #ifndef DATASTRUCT_H
 #define DATASTRUCT_H
 
+// 定义一个唯一的 Mime 类型字符串，用于从【侧边栏】拖拽到【快捷栏】过程中的数据传递
+#define MIME_TYPE_COPYABLE_DATA "application/x-copyable-data-ptr"
+
 #include <QApplication>
 #include <QVariant>
 #include <QImage>
@@ -9,8 +12,9 @@
 #include <QUrl>
 #include <QObject>
 #include <QList>
-#include <QMetaType>      // 包含元对象系统基础头文件，用来声明（注册）自定义数据类型的智能指针
-#include <QSharedPointer> // 同上
+#include <QMetaType>        // 包含元对象系统基础头文件，用来声明（注册）自定义数据类型的智能指针
+#include <QSharedPointer>   // 同上
+#include <QDataStream>      //增加对 QDataStream 的支持。这样可以直接把对象写入文件或拖拽流
 
 
 /*数据类型*/
@@ -45,7 +49,16 @@ class CopyableData{
         QImage getImage();
         QList<QUrl> getUrls();
         QString getInfo();
+
+        // 添加友元操作符，支持数据流的序列化，用于传递
+        friend QDataStream &operator<<(QDataStream &out, const CopyableData &data);
+        friend QDataStream &operator>>(QDataStream &in, CopyableData &data);
 };
+
+// 数据流操作符声明
+QDataStream &operator<<(QDataStream &out, const CopyableData &data);
+QDataStream &operator>>(QDataStream &in, CopyableData &data);
+
 
 
 // 必须在头文件中，且在任何命名空间之外
